@@ -9,6 +9,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"google.golang.org/protobuf/types/known/durationpb"
 	pb "target/targetservice"
 )
 
@@ -32,12 +33,13 @@ func (s *server) BounceIt(ctx context.Context, in *pb.BallIn) (*pb.BallOut, erro
 	ago := now.Sub(w)
 
 	reply := fmt.Sprintf("hello %s", in.GetMessage())
-	time_message := fmt.Sprintf("%s was %v ago", w.Format(time.RFC3339), ago.Truncate(time.Second))
+	time_message := fmt.Sprintf("%s was %v ago", w.Format(time.RFC3339Nano), ago.Truncate(time.Nanosecond))
 
 	return &pb.BallOut{
 		Reply:       reply,
 		TimeMessage: time_message,
 		Now:         timestamppb.New(now),
+		Ago:         durationpb.New(ago),
 	}, nil
 }
 

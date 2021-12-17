@@ -109,21 +109,23 @@ for _, strategy in helpers.each_strategy() do
     describe("known types transformations", function()
 
       test("Timestamp", function()
-        local now = os.time()
-        local now_8601 = os.date("!%FT%T", now)
-        local ago_8601 = os.date("!%FT%TZ", now - 315)
+
+
+        local now_rfc3339nanos = "2021-12-13T17:50:11.001001001Z"
+        local ago_rfc3339nanos = "2021-12-13T17:40:11.001001001Z"
 
         local res, _ = proxy_client:post("/bounce", {
           headers = { ["Content-Type"] = "application/json" },
-          body = { message = "hi", when = ago_8601, now = now_8601 },
+          body = { message = "hi", when = ago_rfc3339nanos, now = now_rfc3339nanos },
         })
         assert.equal(200, res.status)
 
         local body = res:read_body()
         assert.same({
-          now = now_8601,
+          ago = "600s",
+          now = now_rfc3339nanos,
           reply = "hello hi",
-          time_message = ago_8601 .. " was 5m15s ago",
+          time_message = ago_rfc3339nanos .. " was 10m0s ago",
         }, cjson.decode(body))
       end)
     end)

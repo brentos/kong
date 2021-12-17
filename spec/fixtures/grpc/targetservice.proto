@@ -4,6 +4,8 @@ package targetservice;
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
 
 option go_package = "./targetservice";
 
@@ -60,12 +62,15 @@ message BallIn {
   string message = 1;
   google.protobuf.Timestamp when = 2;
   google.protobuf.Timestamp now = 3;
+  google.protobuf.StringValue string_wrapper = 4;
 }
 
 message BallOut {
   string reply = 1;
   string time_message = 2;
   google.protobuf.Timestamp now = 3;
+  google.protobuf.Duration ago = 4;
+  google.protobuf.StringValue string_wrapper = 5;
 }
 
 message Limb {
